@@ -17,6 +17,9 @@ jobs:
       - name: pull docker image mddoc
         run: docker pull eguisse/mddoc:1.1.0
 
+      - name: git log
+        run: git log --no-walk --reverse --tags
+
       - name: run docker image
         run: mkdir -p build && chmod 777 build
 
