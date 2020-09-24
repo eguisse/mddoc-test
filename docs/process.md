@@ -60,7 +60,6 @@ stop
 'LAYOUT_TOP_DOWN
 'LAYOUT_LEFT_RIGHT
 
-
 VPC(aws_vpc, "My Company VPC" , "AWS VPC")  {
 
     ElasticLoadBalancing(elb, "Load balancer", "AWS ELB")
@@ -69,28 +68,28 @@ VPC(aws_vpc, "My Company VPC" , "AWS VPC")  {
 
         rectangle "Zone A" { 
             ECSContainer2(za_cont_1,"Web server container", "Docker container") {
-                component "Flask API server" as za_prom_ret
+                component "Flask API server" as za_api_srv
             }
      
             Compute(za_vm_ec2, "Virtual Machine", "EC2") {
-                 component "Legacy app" as za_prom_tsdb1
+                 component "Legacy app" as za_vm_app
             }
-            za_prom_ret -down-> za_prom_tsdb1
+            za_api_srv -down-> za_vm_app
         }
 
         rectangle "Zone B" { 
             ECSContainer2(zb_cont_1,"Web server container", "Docker container") {
-                component "Flask API server" as zb_prom_ret
+                component "Flask API server" as zb_api_srv
             }        
             Compute(vm_ec2, "Virtual Machine", "EC2") {
-                 component "Legacy app" as zb_prom_tsdb1
+                 component "Legacy app" as zb_vm_app
             }
-            zb_prom_ret -down-> zb_prom_tsdb1
+            zb_api_srv -down-> zb_vm_app
         }
-        za_prom_tsdb1 <-left-> zb_prom_tsdb1: "  sync  "
+        za_vm_app <-left-> zb_vm_app: "  sync  "
     }
-    elb -down-> za_prom_ret: http
-    elb -down-> zb_prom_ret: http
+    elb -down-> za_api_srv: http
+    elb -down-> zb_api_srv: http
 }
 
 @enduml
@@ -98,15 +97,6 @@ VPC(aws_vpc, "My Company VPC" , "AWS VPC")  {
 
 
 
-
-
-## plan uml example  4
-
-
-::uml:: format="png" classes="uml myDiagram" alt="My super diagram placeholder" title="My super diagram" width="300px" height="300px"
-  Goofy ->  MickeyMouse: calls
-  Goofy <-- MickeyMouse: responds
-::end-uml::
 
 ## image png
 
