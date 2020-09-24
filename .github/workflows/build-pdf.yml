@@ -1,0 +1,26 @@
+---
+name: build-pdf
+
+on:
+  push:
+    branches:
+      - '**'
+    tags:
+      - '*.*.*'
+  pull_request:
+
+jobs:
+  docker:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: pull docker image mddoc
+        run: docker pull eguisse/mddoc:1.1.0
+
+      - name: run docker image
+        run: mkdir -p build && chmod 777 build
+
+      - name: run docker image
+        run: docker run --rm -v "$(pwd):/mnt:rw" "eguisse/mddoc:1.1.0" bash makepdf.sh -d docs -b build -o build/mddoc-docker-test.pdf -f mddoc.yml
