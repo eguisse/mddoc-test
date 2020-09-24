@@ -20,7 +20,39 @@ jobs:
       - name: git log
         run: git log --no-walk --reverse --tags --pretty="| %an | %cD | %d | %s |" --abbrev-commit
 
-      - name: run docker image
+      -
+        name: Prepare for docker build
+        id: prep
+        run: |
+          DOCKER_IMAGE=${{ github.repository }}
+          VERSION=noop
+          if [ "${{ github.event_name }}" = "schedule" ]; then
+            VERSION=nightly
+          elif [[ $GITHUB_REF == refs/tags/* ]]; then
+            VERSION=${GITHUB_REF#refs/tags/}
+          elif [[ $GITHUB_REF == refs/heads/* ]]; then
+            VERSION=$(echo ${GITHUB_REF#refs/heads/} | sed -r 's#/+#-#g')
+            if [ "${{ github.event.repository.default_branch }}" = "$VERSION" ]; then
+              VERSION=edge
+            fi
+          elif [[ $GITHUB_REF == refs/pull/* ]]; then
+            VERSION=pr-${{ github.event.number }}
+          fi
+          TAGS="${DOCKER_IMAGE}:${VERSION}"
+          LOCAL_VERSION="${DOCKER_IMAGE}:${VERSION}"
+          if [[ $VERSION =~ ^v[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$ ]]; then
+            MINOR=${VERSION%.*}
+            MAJOR=${MINOR%.*}
+            TAGS="$TAGS,${DOCKER_IMAGE}:${MINOR},${DOCKER_IMAGE}:${MAJOR},${DOCKER_IMAGE}:latest"
+          elif [ "${{ github.event_name }}" = "push" ]; then
+            TAGS="$TAGS,${DOCKER_IMAGE}:sha-${GITHUB_SHA::8}"
+          fi
+          echo ::set-output name=local_version::${LOCAL_VERSION}
+          echo ::set-output name=version::${VERSION}
+          echo ::set-output name=tags::${TAGS}
+          echo ::set-output name=created::$(date -u +'%Y-%m-%dT%H:%M:%SZ')
+
+      - name: prep build dir
         run: mkdir -p build && chmod 777 build
 
       - name: run docker image
@@ -50,6 +82,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps
-          asset_path: ./build/mddoc-test-${{ github.ref }}.pdf
-          asset_name: mddoc-test.pdf
+          asset_path: ./build/mddoc-test.pdf
+          asset_name: mddoc-test-${{ steps.prep.outputs.version }}.pdf
           asset_content_type: application/pdf
