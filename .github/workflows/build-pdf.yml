@@ -13,15 +13,13 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
 
       - name: pull docker image mddoc
         run: docker pull eguisse/mddoc:1.1.3
 
-      - name: git log
-        run: git log --no-walk --reverse --tags --pretty="| %an | %cD | %d | %s |" --abbrev-commit
-
-      -
-        name: Prepare for docker build
+      - name: Prepare for docker build
         id: prep
         run: |
           DOCKER_IMAGE=${{ github.repository }}
@@ -58,12 +56,6 @@ jobs:
       - name: run docker image
         run: docker run --rm -v "$(pwd):/mnt:rw" "eguisse/mddoc:1.1.3" bash makepdf.sh -d docs -b build -o build/mddoc-test.pdf -f mddoc.yml
 
-      - name: Archive production artifacts
-        uses: actions/upload-artifact@v2
-        with:
-          name: mddoc_test_doc.pdf
-          path: build/mddoc-test.pdf
-
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1
@@ -81,7 +73,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: ./build/mddoc-test.pdf
           asset_name: mddoc-test-${{ steps.prep.outputs.version }}.pdf
           asset_content_type: application/pdf
