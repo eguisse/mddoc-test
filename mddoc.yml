@@ -44,7 +44,7 @@ nav:
   - Home: index.md
   - Introduction: introduction.md
   - Processes: process.md
-  - Other diagrams: mwdiag.md
+  - Other diagrams: nwdiag.md
 
 theme:
     name: material
