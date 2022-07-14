@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           fetch-depth: 0
 
@@ -43,26 +43,9 @@ jobs:
         run: docker pull eguisse/mddoc:2.0.0
 
       - name: run docker image
-        run: docker run --rm -v "$(pwd):/mnt:rw" "eguisse/mddoc:2.0.0" bash makepdf.sh -d docs -b build -o build/mddoc-test.pdf -f mddoc.yml
+        run: docker run --rm -v "$(pwd):/mnt:rw" "eguisse/mddoc:2.0.0" bash makesite.sh -d docs -b build -r src/resources -f mddoc.yml -s site
 
-      - name: Create Release
-        id: create_release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Deploy 🚀
+        uses: JamesIves/github-pages-deploy-action@v4
         with:
-          tag_name: ${{ github.ref }}
-          release_name: Release ${{ github.ref }}
-          draft: false
-          prerelease: false
-
-      - name: Upload Release Asset
-        id: upload-release-asset
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./build/mddoc-test.pdf
-          asset_name: mddoc-test-${{ steps.prep.outputs.version }}.pdf
-          asset_content_type: application/pdf
+          folder: site
