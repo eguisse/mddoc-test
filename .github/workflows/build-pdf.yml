@@ -45,6 +45,14 @@ jobs:
       - name: run docker image
         run: docker run --rm -v "$(pwd):/mnt:rw" "eguisse/mddoc:2.0.0" bash makepdf.sh -d docs -b build -o build/mddoc-test.pdf -f mddoc.yml
 
+      - name: run docker image
+        run: docker run --rm -v "$(pwd):/mnt:rw" "eguisse/mddoc:2.0.0" bash mkdocs build -f build/mkdocs.yaml
+
+      - name: Deploy 🚀
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          folder: site
+
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1

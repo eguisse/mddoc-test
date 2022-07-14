@@ -58,7 +58,8 @@ markdown_extensions:
       permalink: true
 
 plugins:
-  - codeinclude
+  - codeinclude:
+      title_mode: pymdownx.tabbed
   - search
   - build_plantuml:
       render: "local" # "server" or "local" for local rendering
