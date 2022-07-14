@@ -1,0 +1,30 @@
+---
+name: build-site
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+
+jobs:
+  docker:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+
+      - name: Deploy docs
+        uses: mhausenblas/mkdocs-deploy-gh-pages@master
+        # Or use mhausenblas/mkdocs-deploy-gh-pages@nomaterial to build without the mkdocs-material theme
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          CONFIG_FILE: mddoc.yml
+          EXTRA_PACKAGES: build-base plantuml
+          # GITHUB_DOMAIN: github.myenterprise.com
+          REQUIREMENTS: requirements.txt
+
+

@@ -1,0 +1,12 @@
+mkdocs-material>=8.1.4
+plantuml-markdown=>3.5.1
+mkdocs-build-plantuml-plugin=>1.7.4
+funcparserlib>=0.3.6
+nwdiag>=2.0.0
+mkdocs-github==0.0.6
+mkdocs-diagrams==1.0.0
+IconFonts=>0.0.3
+mkdocs-extensions=>0.1.2
+mkdocs-pymdownx-material-extras=>1.1.1
+mkdocs-basic-theme>=1.0.1
+mkdocs-codeinclude-plugin=>0.2.0

@@ -47,23 +47,24 @@ nav:
   - Other diagrams: nwdiag.md
 
 theme:
-    name: material
-    language: en
+  name: material
+  language: en
 
 markdown_extensions:
-    - admonition
-    - codehilite:
-          guess_lang: false
-    - toc:
-          permalink: true
+  - admonition
+  - codehilite:
+      guess_lang: false
+  - toc:
+      permalink: true
 
 plugins:
-    - search
-    - build_plantuml:
-          render: "local" # "server" or "local" for local rendering
-          bin_path: "/usr/local/bin/plantuml" # for security reason, we don't use online server
-          output_format: "png" # or "png"
-          diagram_root: "diagrams" # should reside under docs_dir
-          output_folder: "image"
-          input_folder: ""
-          input_extensions: ""
+  - codeinclude
+  - search
+  - build_plantuml:
+      render: "local" # "server" or "local" for local rendering
+      bin_path: "/usr/bin/plantuml" # for security reason, we don't use online server
+      output_format: "svg" # or "png"
+      diagram_root: "docs/diagrams" # should reside under docs_dir
+      output_folder: "out"
+      input_folder: "src"
+      input_extensions: ""

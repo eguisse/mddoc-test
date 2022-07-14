@@ -1,10 +1,10 @@
 ---
-name: build-pdf-site
+name: build-pdf
 
 on:
   push:
     branches:
-      - master
+      - main
   pull_request:
 
 jobs:
@@ -51,8 +51,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: ${VERSION}
-          release_name: Release ${VERSION}
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
           draft: false
           prerelease: false
 
@@ -66,11 +66,3 @@ jobs:
           asset_path: ./build/mddoc-test.pdf
           asset_name: mddoc-test-${{ steps.prep.outputs.version }}.pdf
           asset_content_type: application/pdf
-
-      - name: run docker image mkdocs
-        run: docker run --rm -v "$(pwd):/mnt:rw" "eguisse/mddoc:2.0.0" mkdocs -f mddoc.yml -d site -t github
-
-      - name: Deploy 🚀
-        uses: JamesIves/github-pages-deploy-action@v4
-        with:
-          folder: site
