@@ -9,8 +9,8 @@ site_url: https://localhost/mddoc-test
 site_description: mddoc test document
 site_author: Steve Austin
 repo_url: https://github.com/eguisse/mddoc
-copyright: Copyright (c) 2019 2020, Emmanuel GUISSE
-
+copyright: Copyright (c) 2019 2022, Emmanuel GUISSE
+edit_uri: build/site
 
 extra:
   # first page and page headers

@@ -1,5 +1,5 @@
 ---
-name: build-site
+name: build-pdf-site
 
 on:
   push:
@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           fetch-depth: 0
 
@@ -51,8 +51,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: ${{ github.ref }}
-          release_name: Release ${{ github.ref }}
+          tag_name: ${VERSION}
+          release_name: Release ${VERSION}
           draft: false
           prerelease: false
 
@@ -66,3 +66,11 @@ jobs:
           asset_path: ./build/mddoc-test.pdf
           asset_name: mddoc-test-${{ steps.prep.outputs.version }}.pdf
           asset_content_type: application/pdf
+
+      - name: run docker image mkdocs
+        run: docker run --rm -v "$(pwd):/mnt:rw" "eguisse/mddoc:2.0.0" bash mkdocs -f mddoc.yml -d site -t github
+
+      - name: Deploy 🚀
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          folder: site
