@@ -68,7 +68,7 @@ jobs:
           asset_content_type: application/pdf
 
       - name: run docker image mkdocs
-        run: docker run --rm -v "$(pwd):/mnt:rw" "eguisse/mddoc:2.0.0" bash mkdocs -f mddoc.yml -d site -t github
+        run: docker run --rm -v "$(pwd):/mnt:rw" "eguisse/mddoc:2.0.0" mkdocs -f mddoc.yml -d site -t github
 
       - name: Deploy 🚀
         uses: JamesIves/github-pages-deploy-action@v4
