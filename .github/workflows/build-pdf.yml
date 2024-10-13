@@ -44,13 +44,12 @@ jobs:
       - name: prep build dir
         run: |
           mkdir -p build && chmod 777 build
-          git config --global --add safe.directory /mnt
 
       - name: pull docker image mddoc
         run: docker pull "${{ env.IMAGE_NAME }}"
 
       - name: run docker image
-        run: docker run --rm -v "$(pwd):/mnt:rw" "${{ env.IMAGE_NAME }}" bash makepdf.sh -d docs -b build -o build/mddoc-test.pdf -f mddoc.yml
+        run: docker run --rm -v "$(pwd):/mnt:rw" "${{ env.IMAGE_NAME }}" bash git config --global --add safe.directory /mnt && makepdf.sh -d docs -b build -o build/mddoc-test.pdf -f mddoc.yml
 
       - name: run docker image
         run: docker run --rm -v "$(pwd):/mnt:rw" "${{ env.IMAGE_NAME }}" bash mkdocs build -f build/mkdocs.yaml
