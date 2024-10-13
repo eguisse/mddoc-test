@@ -10,7 +10,7 @@ on:
 
 env:
   REGISTRY: "ghcr.io"
-  IMAGE_NAME: "eguisse/mddoc:2.2.1"
+  IMAGE_NAME: "eguisse/mddoc:2.2.2"
 
 jobs:
   build-pdf:
