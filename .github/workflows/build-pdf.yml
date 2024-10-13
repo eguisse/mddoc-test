@@ -49,10 +49,10 @@ jobs:
         run: docker pull "${{ env.IMAGE_NAME }}"
 
       - name: run docker image
-        run: docker run --rm -v "$(pwd):/mnt:rw" "${{ env.IMAGE_NAME }}" bash git config --global --add safe.directory /mnt && makepdf.sh -d docs -b build -o build/mddoc-test.pdf -f mddoc.yml
+        run: docker run --rm -v "${{ github.workspace }}:/mnt:rw" "${{ env.IMAGE_NAME }}" bash makepdf.sh -d docs -b build -o build/mddoc-test.pdf -f mddoc.yml
 
       - name: run docker image
-        run: docker run --rm -v "$(pwd):/mnt:rw" "${{ env.IMAGE_NAME }}" bash mkdocs build -f build/mkdocs.yaml
+        run: docker run --rm -v "${{ github.workspace }}:/mnt:rw" "${{ env.IMAGE_NAME }}" bash mkdocs build -f build/mkdocs.yaml
 
       - name: Deploy 🚀
         uses: JamesIves/github-pages-deploy-action@v4
