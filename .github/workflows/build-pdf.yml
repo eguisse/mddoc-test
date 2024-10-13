@@ -6,13 +6,18 @@ on:
     branches:
       - master
   pull_request:
+  workflow_dispatch:
+
+env:
+  REGISTRY: "ghcr.io"
+  IMAGE_NAME: "eguisse/mddoc:2.2.1"
 
 jobs:
   docker:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
@@ -40,13 +45,13 @@ jobs:
         run: mkdir -p build && chmod 777 build
 
       - name: pull docker image mddoc
-        run: docker pull eguisse/mddoc:2.0.0
+        run: docker pull "${{ env.IMAGE_NAME }}"
 
       - name: run docker image
-        run: docker run --rm -v "$(pwd):/mnt:rw" "eguisse/mddoc:2.0.0" bash makepdf.sh -d docs -b build -o build/mddoc-test.pdf -f mddoc.yml
+        run: docker run --rm -v "$(pwd):/mnt:rw" "${{ env.IMAGE_NAME }}" bash makepdf.sh -d docs -b build -o build/mddoc-test.pdf -f mddoc.yml
 
       - name: run docker image
-        run: docker run --rm -v "$(pwd):/mnt:rw" "eguisse/mddoc:2.0.0" bash mkdocs build -f build/mkdocs.yaml
+        run: docker run --rm -v "$(pwd):/mnt:rw" "${{ env.IMAGE_NAME }}" bash mkdocs build -f build/mkdocs.yaml
 
       - name: Deploy 🚀
         uses: JamesIves/github-pages-deploy-action@v4
