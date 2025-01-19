@@ -63,8 +63,8 @@ jobs:
       - name: Upload Release Asset
         id: upload-release-asset
         run: |
-          mv ./build/mddoc-test.pdf ./build/mddoc-test-${{ steps.prep.outputs.version }}.pdf
-          gh release upload ${{ github.ref }} ./build/mddoc-test-${{ steps.prep.outputs.version }}.pdf
+          mv ./build/mddoc-test.pdf ./mddoc-test-${{ steps.prep.outputs.version }}.pdf
+          gh release upload ${{ github.ref }} ./mddoc-test-${{ steps.prep.outputs.version }}.pdf
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         shell: bash
